@@ -1,14 +1,14 @@
 /*****************************************************
-                       ssock.c
-           server socket implementation
+                       cpeer.c
+             peer client implementation
        Authors: Mihir Joshi, Fenil Kavathia
                      csc573 NCSU
 *****************************************************/
 
-#include "data.h"
-#include "ssock.h"
+#include "sock/ssock.h"
 
-int __init__()
+int main(int argc, char **argv)
 {
 
+ return 0;
 }

@@ -1,3 +1,10 @@
+/*****************************************************
+                       ll.c
+            linked list implementation
+       Authors: Mihir Joshi, Fenil Kavathia
+                     csc573 NCSU
+*****************************************************/
+
 #include<stdio.h>
 #include<malloc.h>
 #include "ll.h"
