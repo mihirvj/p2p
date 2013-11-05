@@ -4,7 +4,7 @@ OBJS=csock.o ssock.o data.o
 FLAGS=-DSOCK
 
 sock: ${OBJS}
-
+	mv *.o objs/
 %.o : %.c ${HEADERS}
 	${GCC} -c $<
 
