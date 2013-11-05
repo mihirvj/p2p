@@ -1,37 +1,33 @@
 GCC=gcc
-DS_H=ds/ll/ll.h 
-SSOCK_H=sock/ssock.h sock/data.h 
-CSOCK_H=sock/csock.h sock/data.h
-OBJS=ds/ll/ll.o sock/csock.o sock/ssock.o sock/data.o boot.o cpeer.o speer.o
+S_HEADERS=ds/ll/ll.h sock/ssock.h sock/data.h 
+C_HEADERS=sock/csock.h sock/data.h
+S_OBJS=ds/ll/ll.o sock/ssock.o sock/data.o 
+C_OBJS=sock/csock.o sock/data.o
+BOOT_OBJ=boot.o 
+CPEER_OBJ=cpeer.o 
+SPEER_OBJ=speer.o
 EXEC_PATH=exec
 
 FLAGS=-DAPP
 
-all: ${OBJS} boot ps pc
-	mv *.o objs/
+all: boot speer cpeer
 	mv sock/*.o sock/objs/
 
-%.o: %.c ${DS_H} ${SSOCK_H} ${CSOCK_H}
+boot: ${S_OBJS} ${HEADERS}
+	${GCC} -o $(EXEC_PATH)/boot boot.c ${S_OBJS}
+
+speer: ${S_OBJS} ${HEADERS}
+	${GCC} -o $(EXEC_PATH)/speer speer.c ${S_OBJS}
+
+cpeer: ${C_OBJS} ${HEADERS}
+	${GCC} -o $(EXEC_PATH)/cpeer cpeer.c ${C_OBJS}
+
+%.o: %.c ${HEADERS}
 	${GCC} -c $< -o $@
-
-ds/ll/%.o : 
-	cd ds; make
-
-sock/%.o :
-	cd sock; make
-
-boot: boot.o ${DS_H} ${SSOCK_H}
-	${GCC} boot.c -o $(EXEC_PATH)/boot
-
-pc: cpeer.o ${CSOCK_H}
-	${GCC} cpeer.c -o $(EXEC_PATH)/cpeer
-
-ps: speer.c ${SSOCK_H}
-	${GCC} speer.c -o $(EXEC_PATH)/speer
 
 clean: 
 	rm -f *.o
-	rm -f objs/*.o
+	rm -f exec/*
 	cd ds; make clean
 	cd sock; make clean
 

@@ -1,0 +1,40 @@
+GCC=gcc
+HEADERS=ds/ll/ll.h sock/ssock.h sock/data.h sock/csock.h
+DS_OBJS=ds/ll/ll.o 
+SOCK_OBJS=sock/csock.o sock/ssock.o sock/data.o 
+BOOT_OBJ=boot.o 
+CPEER_OBJ=cpeer.o 
+SPEER_OBJ=speer.o
+EXEC_PATH=exec
+
+FLAGS=-DAPP
+
+all: ds sock boot speer cpeer
+	mv *.o objs/
+	mv sock/*.o sock/objs/
+
+ds: ${DS_OBJS}
+
+sock: ${SOCK_OBJS}
+
+boot: ${BOOT_OBJ} ${DS_OBJS} ${SOCK_OBJS}
+	${GCC} -o $(EXEC_PATH)/boot $(BOOT_OBJ) $(DS_OBJS) $(SOCK_OBJS)
+
+speer: ${SPEER_OBJ} ${SOCK_OBJS} ${DS_OBJS}
+	${GCC} -o $(EXEC_PATH)/speer ${SPEER_OBJ} ${DS_OBJS} ${SOCK_OBJS}
+
+cpeer: ${CPEER_OBJ} ${SOCK_OBJS} ${DS_OBJS}
+	${GCC} -o $(EXEC_PATH)/cpeer ${CPEER_OBJ} ${DS_OBJS} ${SOCK_OBJS}
+
+#sock/%.o: sock/%.c ${HEADERS}
+#	${GCC} -c $< ${FLAGS} $^
+
+#ds/ll/%.o: ds/ll/%.c ${HEADERS}
+#	${GCC} -c $< ${FLAGS} $^
+
+clean: 
+	rm -f *.o
+	rm -f objs/*.o
+	cd ds; make clean
+	cd sock; make clean
+

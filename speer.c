@@ -5,7 +5,7 @@
                      csc573 NCSU
 *****************************************************/
 
-#include "sock/csock.h"
+#include "sock/ssock.h"
 
 int main(int argc, char **argv)
 {

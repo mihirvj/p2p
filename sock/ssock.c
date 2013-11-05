@@ -6,16 +6,18 @@
 *****************************************************/
 
 #include "ssock.h"
+#include "../ds/ll/ll.h"
 
-void bind_sock(int sock, int port, struct sockaddr_in addr)
+void bind_sock(int sock, int port)
 {
+ struct sockaddr_in addr;
  bzero((char *) &addr, sizeof(addr));
  
  addr.sin_family = AF_INET;
  addr.sin_addr.s_addr = INADDR_ANY;
  addr.sin_port = htons(port);
  if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0)
-   error("error while binding");
+   error("error while binding!");
 }
 
 void listen_sock(int sock)

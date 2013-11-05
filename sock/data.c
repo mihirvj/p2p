@@ -38,3 +38,15 @@ void write_to(int sock, char *buffer, int buf_len)
  if(bytes_written < 0)
   error("error writing to socket");
 }
+
+void error(char *msg)
+{
+  perror(msg);
+  exit(-4249);
+}
+
+void close_sock(int sock)
+{
+  close(sock);
+}
+
