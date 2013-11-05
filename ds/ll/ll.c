@@ -9,11 +9,8 @@
 #include<malloc.h>
 #include "ll.h"
 
-node *head = NULL;
-node *last = NULL;
-
 // adds node to linked list
-void add_node(int key, int data)
+void add_node(node **head, int key, int data)
 {
   node *ptr;
 
@@ -24,18 +21,23 @@ void add_node(int key, int data)
 
   if(head == NULL)
   {
-     head = ptr;
-     last = ptr;
+     *head = ptr;
   }
   else
   {
-     last->next = ptr;
-     last = ptr;
+     node *temp = *head;
+
+     while(temp->next != NULL)
+     {
+       temp = temp->next;
+     }
+
+     temp->next = ptr;
   }
 }
 
 // updates all occurences in a linked list when given a key
-int update_node(int key, int new_data)
+int update_node(node *head, int key, int new_data)
 {
    node *ptr;
    int replace_count = 0;
@@ -52,8 +54,24 @@ int update_node(int key, int new_data)
    return replace_count;
 }
 
+node** lookupall(node *head, int key)
+{
+  node *ptr = head;
+  node **list = NULL;
+
+  for(ptr = head; ptr != NULL; ptr = ptr->next)
+  {
+      if(ptr->key == key)
+      {
+         add_node(list, key, ptr->data);
+      }
+  }
+
+  return list;
+}
+
 // traverses and prints all key value pairs
-void traverse()
+void traverse(node *head)
 {
   node *ptr;
   
@@ -62,35 +80,21 @@ void traverse()
   for(ptr = head; ptr != NULL; ptr = ptr->next)
   {
     printf("key: %d value: %d\n", ptr->key, ptr->data);
-#if MJDB
-getch();
-#endif
   }
 
   printf("\nLinked list traversel completed\n");
 }
 
-// reverses linked list
-void reverse()
+void destroy_list(node *head)
 {
   node *ptr = head;
-  node *prev = head;
 
-  if(ptr->next != NULL)
+  while(ptr != NULL)
   {
-    head = head->next;
-    ptr->next = NULL;
-    ptr = head;
-  }
+    node *temp = ptr;
 
-  while(ptr->next != NULL)
-  {
-    head = head->next;
-    ptr->next = prev;
-    prev = ptr;
-    ptr = head;
-  }
+    ptr = ptr->next;
 
-  head = ptr;
-  head->next = prev;
+    free(temp);
+  }
 }

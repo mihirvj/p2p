@@ -5,7 +5,8 @@ typedef struct ll
   struct ll *next;
 }node;
 
-void add_node(int key, int data);
-int update_node(int key, int new_data);
-void traverse();
-void reverse();
+void add_node(node **head, int key, int data);
+int update_node(node *head, int key, int new_data);
+void traverse(node *head);
+node** lookupall(node *head, int key);
+void destroy_list(node *head);
