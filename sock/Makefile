@@ -10,3 +10,4 @@ sock: ${OBJS}
 
 clean:
 	rm -f *.o
+	rm -f objs/*o

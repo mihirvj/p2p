@@ -1,3 +1,22 @@
 // common functionality to both client server
 #include<stdio.h>
+#include<sys/types.h>
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<strings.h>
+#include<stdlib.h>
 
+void error(char *msg)
+{
+  perror(msg);
+  exit(-4249);
+}
+
+void close_sock(int sock)
+{
+  close(sock);
+}
+
+int get_sock();
+void read_from(int sock, char *buffer, int buf_len);
+void write_to(int sock, char *buffer, int buf_len);

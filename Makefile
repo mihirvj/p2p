@@ -9,6 +9,7 @@ FLAGS=-DAPP
 
 all: ${OBJS} boot ps pc
 	mv *.o objs/
+	mv sock/*.o sock/objs/
 
 %.o: %.c ${DS_H} ${SSOCK_H} ${CSOCK_H}
 	${GCC} -c $< -o $@
@@ -31,4 +32,6 @@ ps: speer.c ${SSOCK_H}
 clean: 
 	rm -f *.o
 	rm -f objs/*.o
+	cd ds; make clean
+	cd sock; make clean
 
