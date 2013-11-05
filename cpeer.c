@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
  read_from(sock, buf, BUFSIZE);
 
- printf("\nserver replied: %s", buf);
+ printf("\nserver replied: %s\n", buf);
 
  close_sock(sock);
 

@@ -17,7 +17,7 @@ void bind_sock(int sock, int port)
  addr.sin_addr.s_addr = INADDR_ANY;
  addr.sin_port = htons(port);
  if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0)
-   error("error while binding!");
+   error("error while binding");
 }
 
 void listen_sock(int sock)
@@ -36,7 +36,13 @@ int accept_con(int sock)
  if(csock < 0)
    error("error while accepting connection");
  else
-   printf("accepted connection successfully");
+ {
+   printf("\naccepted connection successfully from \n");
+   printf("%d.%d.%d.%d\n", (int)(client.sin_addr.s_addr&0xFF),
+    (int)((client.sin_addr.s_addr&0xFF00)>>8),
+    (int)((client.sin_addr.s_addr&0xFF0000)>>16),
+    (int)((client.sin_addr.s_addr&0xFF000000)>>24));
+ }
 
  return csock;
 }
