@@ -9,4 +9,4 @@ ll: ${OBJS}
 	${GCC} -c $< .
 
 clean:
-	rm -f *.o
+	rm -f ll/*.o
