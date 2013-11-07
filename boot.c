@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 {
   int sock, csock;
   char buf[BUFSIZE];
+  pid_t procId;
 
   // get socket descriptor
   sock = get_sock();
@@ -24,16 +25,33 @@ int main(int argc, char **argv)
 
   listen_sock(sock);
 
-  // accept connection
-  csock = accept_con(sock);
- 
-  // read from client
-  read_from(csock, buf, BUFSIZE);
+  while(1)
+  {
+    // accept connection
+    csock = accept_con(sock);
 
-  // echo reply to client
-  write_to(csock, buf, BUFSIZE);
+    procId = fork();
 
-  close_sock(csock);
-  close_sock(sock);
+    if(procId < 0)
+    {
+       error("error on fork");
+    }
+
+    if(procId == 0) // client process
+    {
+       close_sock(sock);
+
+       // read from client
+       read_from(csock, buf, BUFSIZE);
+
+       // echo reply to client
+       write_to(csock, buf, BUFSIZE);
+    }
+    else
+    {
+       close_sock(csock);
+    }
+  }
+
   return 0;
 }

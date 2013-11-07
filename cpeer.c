@@ -21,7 +21,9 @@ int main(int argc, char **argv)
 
  connect_to(sock, SERVER_ADDR, SERVER_PORT);
 
- strcpy(buf, "pinging");
+ printf("enter message: ");
+
+ scanf("%s", buf);
 
  write_to(sock, buf, BUFSIZE);
 
