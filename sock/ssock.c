@@ -12,9 +12,7 @@ void bind_sock(int sock, int port)
  int opt = 1;
  struct sockaddr_in addr;
 
-#ifdef GRAN1
  bzero((char *) &addr, sizeof(addr));
-#endif
 
  addr.sin_family = AF_INET;
  addr.sin_addr.s_addr = INADDR_ANY;
