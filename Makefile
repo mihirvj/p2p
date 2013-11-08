@@ -7,6 +7,7 @@ BOOT_OBJ=boot.o
 CPEER_OBJ=cpeer.o 
 SPEER_OBJ=speer.o
 EXEC_PATH=exec
+PLIB=-lpthread
 
 FLAGS=-DAPP
 
@@ -14,7 +15,7 @@ all: boot speer cpeer
 	mv sock/*.o sock/objs/
 
 boot: ${S_OBJS} ${HEADERS}
-	${GCC} -o $(EXEC_PATH)/boot boot.c ${S_OBJS}
+	${GCC} -o $(EXEC_PATH)/boot boot.c ${S_OBJS} $(PLIB)
 
 speer: ${S_OBJS} ${HEADERS}
 	${GCC} -o $(EXEC_PATH)/speer speer.c ${S_OBJS}

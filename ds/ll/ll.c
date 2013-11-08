@@ -19,7 +19,7 @@ void add_node(node **head, int key, int data)
   ptr->data = data;
   ptr->next = NULL;
 
-  if(head == NULL)
+  if(*head == NULL)
   {
      *head = ptr;
   }
@@ -83,6 +83,41 @@ void traverse(node *head)
   }
 
   printf("\nLinked list traversel completed\n");
+}
+
+int delete_node(node **head, int key)
+{
+  int del_count = 0;
+  node *ptr, *prev;
+  
+  if((*head) == NULL)
+    return 1;
+
+  if((*head)->key == key && (*head)->next == NULL)
+  {
+    *head = NULL;
+    return 1;
+  }
+
+  ptr = (*head)->next;
+  prev = *head;
+
+  while(ptr != NULL)
+  {
+    if(ptr->key == key)
+    {
+      node *temp = ptr;
+      prev->next = ptr->next;
+      ptr = ptr->next;
+      free(temp);
+      del_count++;
+    }
+
+    prev = ptr;
+    ptr = ptr->next;
+  }
+
+  return del_count;
 }
 
 void destroy_list(node *head)

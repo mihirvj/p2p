@@ -6,7 +6,6 @@
 *****************************************************/
 
 #include "ssock.h"
-#include "../ds/ll/ll.h"
 
 void bind_sock(int sock, int port)
 {
