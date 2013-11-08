@@ -9,5 +9,5 @@ void add_node(node **head, int key, int data);
 int update_node(node *head, int key, int new_data);
 void traverse(node *head);
 node** lookupall(node *head, int key);
-void destroy_list(node *head);
+void destroy_list(node **head);
 int delete_node(node **head, int key);

@@ -74,7 +74,7 @@ node** lookupall(node *head, int key)
 void traverse(node *head)
 {
   node *ptr;
-  
+
   printf("\nPrinting linked list\n");
 
   for(ptr = head; ptr != NULL; ptr = ptr->next)
@@ -120,16 +120,18 @@ int delete_node(node **head, int key)
   return del_count;
 }
 
-void destroy_list(node *head)
+void destroy_list(node **head)
 {
-  node *ptr = head;
+  node *current = *head;
 
-  while(ptr != NULL)
+  while(current != NULL)
   {
-    node *temp = ptr;
+    node *next = current->next;
 
-    ptr = ptr->next;
+    free(current);
 
-    free(temp);
+    current = next;
   }
+
+  *head = NULL;
 }

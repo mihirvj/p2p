@@ -41,8 +41,10 @@ void write_to(int sock, char *buffer, int buf_len)
 
 void error(char *msg)
 {
-  strcat(msg, "\n");
   perror(msg);
+
+  printf("\n");
+
   exit(-4249);
 }
 

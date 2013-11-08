@@ -20,7 +20,7 @@ void *handle_con(void *arg);
 
 void clear(int signum)
 {
-  destroy_list(rfc_head);
+  destroy_list(&rfc_head);
 
   close_sock(sock);
 
@@ -28,9 +28,29 @@ void clear(int signum)
   printf("[log] list destroyed\n");
 
   printf("[log] server socket closed\n");
+
+  printf("[log] list after destroying\n");
+
+  traverse(rfc_head);
 #endif
 
+  rfc_head = NULL;
+
   exit(0);
+}
+
+void segv(int signum)
+{
+  printf("Whoa.. It crashed, MJ! Consider restarting your server while we do cleanup\n");
+
+  destroy_list(&rfc_head);
+
+  close_sock(sock);
+
+  fflush(stdout);
+
+  signal(signum, SIG_DFL);
+  kill(getpid(), signum);
 }
 
 int main(int argc, char **argv)
@@ -42,20 +62,36 @@ int main(int argc, char **argv)
   pthread_t threads;
   
   signal(SIGINT, clear);
+  signal(SIGSEGV, segv);
 
   printf("\nserver started. press ctrl+c to stop\n");
 
   // get socket descriptor
   sock = get_sock();
 
+#ifdef GRAN1
+printf("[gran 1] created socket\n");
+#endif
+
   // bind socket
   bind_sock(sock, PORT);
-  
+
+#ifdef GRAN1
+printf("[gran 1] bind socket\n");
+#endif
+
   //listen now
   listen_sock(sock);
 
+#ifdef GRAN1
+printf("[gran 1] now listening\n");
+#endif
+
   pthread_attr_init(&attr);
 
+#ifdef GRAN1
+printf("[gran 1] init thread\n");
+#endif
   while(1)
   {
     // accept connection
@@ -99,11 +135,9 @@ void *handle_con(void *arg)
 
 #ifdef APP
    printf("[log] node added\n");
-#endif
 
    traverse(rfc_head);
 
-#ifdef APP
    printf("[log] list traversed\n");
 #endif
  }

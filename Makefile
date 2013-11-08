@@ -9,7 +9,7 @@ SPEER_OBJ=speer.o
 EXEC_PATH=exec
 PLIB=-lpthread
 
-FLAGS=-DAPP
+FLAGS=-DAPP -g -DGRAN1
 
 all: boot speer cpeer
 	mv sock/*.o sock/objs/
@@ -24,7 +24,7 @@ cpeer: ${C_OBJS} ${HEADERS}
 	${GCC} -o $(EXEC_PATH)/cpeer cpeer.c ${C_OBJS} ${FLAGS}
 
 %.o: %.c ${HEADERS}
-	${GCC} -c $< -o $@
+	${GCC} -c $< -o $@ ${FLAGS}
 
 clean: 
 	rm -f *.o
