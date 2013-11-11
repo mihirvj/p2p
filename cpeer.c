@@ -9,7 +9,7 @@
 #include<string.h>
 
 #define SERVER_PORT 7752
-#define SERVER_ADDR "192.168.1.113"
+#define SERVER_ADDR "192.168.1.121"
 #define BUFSIZE 256
 
 int main(int argc, char **argv)

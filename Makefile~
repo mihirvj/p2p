@@ -11,7 +11,7 @@ PLIB=-lpthread
 
 FLAGS=-DAPP -g -DGRAN1
 
-all: boot cpeer
+all: boot speer cpeer
 	mv sock/*.o sock/objs/
 
 boot: ${S_OBJS} ${HEADERS}

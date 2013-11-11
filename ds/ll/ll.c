@@ -143,6 +143,7 @@ while(ptr!=NULL)
 			prev->next=ptr->next;
 			free(ptr);
 			del_count++;
+		        }
 		}
 	else
 		{
