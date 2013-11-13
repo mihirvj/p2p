@@ -1,6 +1,6 @@
 GCC=gcc
-HEADERS=ll/hostll.h ll/rfcll.h
-OBJS=ll/hosll.o ll/rfcll.o
+HEADERS=ll/ll.h
+OBJS=ll/ll.o 
 FLAGS=-DP2P
 
 ll: ${OBJS}

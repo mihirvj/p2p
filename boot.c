@@ -6,14 +6,16 @@
 *****************************************************/
 
 #include "sock/ssock.h"
-#include "ds/ll/ll.h"
+#include "ds/ll/hostll.h"
+#include "ds/ll/rfcll.h"
 #include<signal.h>
 #include<pthread.h>
 
 #define PORT 7752
 #define BUFSIZE 256
 
-node *rfc_head;
+rnode *rfc_head;
+hnode *host_head;
 int sock;
 
 void *handle_con(void *arg);
@@ -21,6 +23,7 @@ void *handle_con(void *arg);
 void clear(int signum)
 {
   destroy_list(&rfc_head);
+  destroy_list(&host_head);
 
   close_sock(sock);
 
@@ -31,10 +34,11 @@ void clear(int signum)
 
   printf("[log] list after destroying\n");
 
-  traverse(rfc_head);
+  //rtraverse(rfc_head);
 #endif
 
   rfc_head = NULL;
+  host_head=NULL;
 
   exit(0);
 }
@@ -44,6 +48,7 @@ void segv(int signum)
   printf("Whoa.. It crashed, MJ! Consider restarting your server while we do cleanup\n");
 
   destroy_list(&rfc_head);
+  destroy_list(&host_head);
 
   close_sock(sock);
 
@@ -117,6 +122,7 @@ void *handle_con(void *arg)
  printf("[log] I am in child process of csock: %d", csock);
 #endif
 
+//somewhere here new node will be added to linklist	
  // read from client
  read_from(csock, buf, BUFSIZE);
 
@@ -131,12 +137,12 @@ void *handle_con(void *arg)
    printf("[log] comparison success rfc head: %ld\n", &rfc_head);
 #endif
 
-   add_node(&rfc_head, csock, 0);
-
+   //add_node(&rfc_head, csock, 0);
+   printf("here do something");
 #ifdef APP
    printf("[log] node added\n");
 
-   traverse(rfc_head);
+   //traverse(rfc_head);
 
    printf("[log] list traversed\n");
 #endif
