@@ -5,7 +5,6 @@ S_OBJS=ds/ll/hostll.o ds/ll/rfcll.o sock/ssock.o sock/data.o parser/parse.o
 C_OBJS=sock/csock.o sock/data.o sock/ssock.o parser/parse.o
 BOOT_OBJ=boot.o 
 CPEER_OBJ=cpeer.o 
-SPEER_OBJ=speer.o
 EXEC_PATH=exec
 PLIB=-lpthread
 
@@ -13,6 +12,7 @@ FLAGS=-DAPP -g -DGRAN1
 
 all: boot cpeer
 	mv sock/*.o sock/objs/
+	@echo "-----------------compilation success---------------"
 
 boot: ${S_OBJS} ${HEADERS}
 	${GCC} -o $(EXEC_PATH)/boot boot.c ${S_OBJS} $(PLIB) ${FLAGS}
@@ -23,7 +23,7 @@ boot: ${S_OBJS} ${HEADERS}
 cpeer: ${C_OBJS} ${HEADERS}
 	${GCC} -o $(EXEC_PATH)/cpeer cpeer.c ${C_OBJS} ${FLAGS}
 
-%.o: %.c ${HEADERS}
+%.o: %.c ${C_HEADERS} ${S_HEADERS}
 	${GCC} -c $< -o $@ ${FLAGS}
 
 clean: 

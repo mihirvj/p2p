@@ -4,7 +4,7 @@ int main()
 {
   char request[1000], rfc[50], host[50], port[50], title[100], response[1000];
   int err = OK;
-  int method = LOOKUP;
+  int method = LISTALL;
   int i;
   int recvmethod;
 

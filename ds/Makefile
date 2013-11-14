@@ -6,7 +6,7 @@ FLAGS=-DP2P
 ll: ${OBJS}
 
 %.o ll/%.o: %.c ll/%.c ${HEADERS}
-	${GCC} -c $< .
+	${GCC} -c $< 
 
 clean:
 	rm -f ll/*.o

@@ -44,6 +44,8 @@ int parse_response(char buf[1000], int index, char rfc[50], char title[50], char
 
 	strcpy(port, line);
   }
+  else
+	return -1;
 
   return 1;
 }

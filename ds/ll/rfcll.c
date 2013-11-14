@@ -62,25 +62,22 @@ void add_rnode(rnode **head,int rfc_no,char *title,char *hostname,int port)
 
 //Here we are not passing the title as it is redundant only rfc_no is sufficient as user must pass rfc_no in LOOKUP request
 
-rnode** lookupall(rnode *head, int rfc_no)
+void rlookupall(rnode *head, int rfc_no, rnode **list)
 {
   rnode *ptr = head;
-  rnode **list = NULL;
 
   for(ptr = head; ptr != NULL; ptr = ptr->next)
   {
       if(ptr->rfc_no == rfc_no)
       {
-         //add_rnode(list, key, ptr->data);  //here we need to add all data
+         add_rnode(list, ptr->rfc_no, ptr->title, ptr->host, ptr->port);  //here we need to add all data
       }
   }
-
-  return list;
 } 
 
 // traverses and prints all RFC node present in linkedlist
 //  This function is somewhat remaining as we need to pass this info to client so that remaining
-void rtraversal(rnode *head)
+void rtraverse(rnode *head)
 {
 
 printf("printing current rfc list\n");
@@ -132,7 +129,7 @@ return del_count;
 }	
 
 	
-void destroy_list(rnode **head)
+void destroy_rlist(rnode **head)
 {
   rnode *current = *head;
 

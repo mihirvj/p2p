@@ -6,8 +6,10 @@
 *****************************************************/
 
 #include "sock/ssock.h"
-#include "ds/ll/hostll.h"
 #include "ds/ll/rfcll.h"
+#include "ds/ll/hostll.h"
+#include "parser/parse.h"
+
 #include<signal.h>
 #include<pthread.h>
 
@@ -22,8 +24,9 @@ void *handle_con(void *arg);
 
 void clear(int signum)
 {
-  destroy_list(&rfc_head);
-  destroy_list(&host_head);
+  pthread_exit(NULL);
+  destroy_rlist(&rfc_head);
+  destroy_hlist(&host_head);
 
   close_sock(sock);
 
@@ -47,8 +50,8 @@ void segv(int signum)
 {
   printf("Whoa.. It crashed, MJ! Consider restarting your server while we do cleanup\n");
 
-  destroy_list(&rfc_head);
-  destroy_list(&host_head);
+  destroy_rlist(&rfc_head);
+  destroy_hlist(&host_head);
 
   close_sock(sock);
 
@@ -62,6 +65,10 @@ int main(int argc, char **argv)
 {
   int csock, id;
   pid_t procId;
+
+  struct sockaddr_in addr;
+  socklen_t addr_len;
+  char port[50], host[50];
 
   pthread_attr_t attr;
   pthread_t threads;
@@ -102,6 +109,26 @@ printf("[gran 1] init thread\n");
     // accept connection
     csock = accept_con(sock);
 
+    addr_len = sizeof(addr);
+
+	if(getpeername(csock, (struct sockaddr * )&addr, &addr_len) == -1)
+	{
+		printf("[error] not able to get socket name\n");
+		return;
+	}
+
+	sprintf(port, "%d", ntohs(addr.sin_port));
+   	sprintf(host, "%d.%d.%d.%d", 
+	(int)(addr.sin_addr.s_addr&0xFF), 
+	    (int)((addr.sin_addr.s_addr&0xFF00)>>8),
+		    (int)((addr.sin_addr.s_addr&0xFF0000)>>16),
+			    (int)((addr.sin_addr.s_addr&0xFF000000)>>24));
+
+	
+
+	add_hnode(&host_head, host, atoi(port));
+
+	printf("\ngot connection from: %s\n", host);
     id = csock;
 
     // create a thread to handle connection
@@ -117,55 +144,94 @@ void *handle_con(void *arg)
 {
  char buf[BUFSIZE];
  int csock = *(int *) arg;
+ char rfc[50], host[50], port[50], title[50];
+ int method, errcode;
 
 #ifdef APP
  printf("[log] I am in child process of csock: %d", csock);
 #endif
 
+while(1)
+{
 //somewhere here new node will be added to linklist	
  // read from client
  read_from(csock, buf, BUFSIZE);
 
 #ifdef APP
- printf("\n[log] client says: %s\n", buf);
+ printf("\n[log] client %d says: %s\n", csock, buf);
 #endif
 
 //fflush(stdout);
- if(strcmp(buf, "add") == 0)
- {
-#ifdef APP
-   printf("[log] comparison success rfc head: %ld\n", &rfc_head);
-#endif
-
-   //add_node(&rfc_head, csock, 0);
-   printf("here do something");
-#ifdef APP
-   printf("[log] node added\n");
-
-   //traverse(rfc_head);
-
-   printf("[log] list traversed\n");
-#endif
- }
- else
- {
-#ifdef APP
-   printf("[log] comparison fail\n");
-#endif
- }
 
 #ifdef APP
  printf("[log] writing to client %s\n", buf);
 #endif
 
+ errcode = parse_request(buf, rfc, host, port, title, &method);
+
+ generate_response(buf, errcode, method);
+
+ if(method == ADD)
+ {
+	add_rnode(&rfc_head, atoi(rfc), title, host, atoi(port));
+	append_response(buf, atoi(rfc), host, port, title);
+#ifdef APP
+	printf("\n----printing rfc list----\n");
+	rtraverse(rfc_head);
+#endif
+ }
+ if(method == LISTALL)
+ {
+	rnode *list = rfc_head;
+
+	while(list != NULL)
+	{
+		char port_no[50];
+		sprintf(port_no,"%d", list->port);
+
+		append_response(buf, list->rfc_no, list->host, port_no, list->title);
+		list = list->next;
+	}
+
+ }
+ if(method == LOOKUP)
+ {	
+	rnode *rlist, *rptr;
+	printf("\nlooking up: %s\n", rfc);
+
+	rlookupall(rfc_head, atoi(rfc), &rlist);
+
+#ifdef APP
+	printf("\n----printing looked up list------\n");
+	rtraverse(rlist);
+#endif
+	rptr = rlist;
+
+	while(rptr != NULL)
+	{
+		char port_no[50];
+		printf("host:%s\nrfc: %d\n", rptr->host, rptr->rfc_no);
+		sprintf(port_no, "%d", rptr->port);
+		append_response(buf, rptr->rfc_no, rptr->host, port_no, rptr->title);
+		rptr = rptr->next;
+	}
+
+	destroy_rlist(&rlist);
+
+#ifdef APP
+	printf("\n----list after destroying---\n");
+	rtraverse(rlist);
+#endif
+ }
  // echo reply to client
  write_to(csock, buf, BUFSIZE);
 
- close_sock(csock);
+ //close_sock(csock);
 
 #ifdef APP
  printf("[log] client socket closed %d\n", csock);
 #endif
+}
 
  pthread_exit(NULL);
 }

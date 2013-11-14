@@ -23,7 +23,12 @@ void read_from(int sock, char *buffer, int buf_len)
 
   bzero(buffer, buf_len);
 
-  bytes_read = read(sock, buffer, buf_len);
+  while((bytes_read = read(sock, buffer, buf_len)) <= 0)
+  {
+	sleep(100);
+  }
+
+ printf("[log] read bytes: %d\n", bytes_read);
 
  if(bytes_read < 0)
    error("error while reading");  

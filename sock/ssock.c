@@ -6,6 +6,7 @@
 *****************************************************/
 
 #include "ssock.h"
+#include "../ds/ll/hostll.h"
 
 void bind_sock(int sock, int port)
 {
@@ -34,6 +35,7 @@ int accept_con(int sock)
  struct sockaddr_in client;
  int client_len = sizeof(client);
  int csock;
+ char req_from[50];
 
  csock = accept(sock, (struct sockaddr *) &client, &client_len);
 
@@ -41,11 +43,13 @@ int accept_con(int sock)
    error("error while accepting connection");
  else
  {
-   printf("\naccepted connection successfully from \n");
-   printf("%d.%d.%d.%d\n", (int)(client.sin_addr.s_addr&0xFF),
+   printf("\naccepted connection successfully from ");
+   sprintf(req_from, "%d.%d.%d.%d", (int)(client.sin_addr.s_addr&0xFF),
     (int)((client.sin_addr.s_addr&0xFF00)>>8),
     (int)((client.sin_addr.s_addr&0xFF0000)>>16),
     (int)((client.sin_addr.s_addr&0xFF000000)>>24));
+
+   printf("%s:%d\n", req_from, ntohs(client.sin_port));
  }
 
  return csock;

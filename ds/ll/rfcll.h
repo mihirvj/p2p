@@ -1,3 +1,5 @@
+#include<string.h>
+
 typedef struct rfcnode
 {
   int rfc_no;
@@ -12,5 +14,5 @@ void add_rnode(rnode **head,int rfc_no,char *title,char *hostname,int port);
 void rtraverse(rnode *head);
 //node** lookupall(node *head, int key);
 void destroy_rlist(rnode **head);
-int delete_node(rnode **head, char *hostname);
-rnode** rlookupall(rnode *head, int rfc_no);
+int delete_rnode(rnode **head, char *hostname);
+void rlookupall(rnode *head, int rfc_no, rnode **list);

@@ -34,3 +34,27 @@ void connect_to(int sock, char *server_addr, int port)
  }
 }
 
+void read_my_ip(char ip[50])
+{
+ int fd;
+ struct ifreq ifr;
+ struct sockaddr_in *client;
+
+ fd = socket(AF_INET, SOCK_STREAM, 0);
+
+ ifr.ifr_addr.sa_family = AF_INET;
+
+ strncpy(ifr.ifr_name, "wlan0", IFNAMSIZ-1);
+
+ ioctl(fd, SIOCGIFADDR, &ifr);
+
+ close(fd);
+
+ client = (struct sockaddr_in *) &ifr.ifr_addr;
+
+ /* display result */
+ sprintf(ip, "%d.%d.%d.%d", (int)(client->sin_addr.s_addr&0xFF),
+    (int)((client->sin_addr.s_addr&0xFF00)>>8),
+    (int)((client->sin_addr.s_addr&0xFF0000)>>16),
+    (int)((client->sin_addr.s_addr&0xFF000000)>>24));
+}
