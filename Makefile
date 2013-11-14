@@ -1,8 +1,8 @@
 GCC=gcc
 S_HEADERS=ds/ll/hostll.h ds/ll/rfcll.h sock/ssock.h sock/data.h 
 C_HEADERS=sock/csock.h sock/data.h sock/ssock.h
-S_OBJS=ds/ll/hostll.o ds/ll/rfcll.o sock/ssock.o sock/data.o 
-C_OBJS=sock/csock.o sock/data.o sock/ssock.o
+S_OBJS=ds/ll/hostll.o ds/ll/rfcll.o sock/ssock.o sock/data.o parser/parse.o 
+C_OBJS=sock/csock.o sock/data.o sock/ssock.o parser/parse.o
 BOOT_OBJ=boot.o 
 CPEER_OBJ=cpeer.o 
 SPEER_OBJ=speer.o
