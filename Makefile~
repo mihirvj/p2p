@@ -29,7 +29,8 @@ cpeer: ${C_OBJS} ${HEADERS}
 
 clean: 
 	rm -f *.o
-	rm -r exec/*
+	rm -r exec/rfc
+	rm -f exec/*
 	cd ds; make clean
 	cd sock; make clean	
         

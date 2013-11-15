@@ -48,7 +48,7 @@ void clear(int signum)
 
 void segv(int signum)
 {
-  printf("Whoa.. It crashed, FM! Consider restarting your server while we do cleanup\n");
+  printf("Whoa.. It crashed, MJ! Consider restarting your server while we do cleanup\n");
 
   destroy_rlist(&rfc_head);
   destroy_hlist(&host_head);

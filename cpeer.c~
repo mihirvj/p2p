@@ -357,7 +357,7 @@ if(strcmp(strncpy(temp_buf,file_data,8),"!@#$%^&*")==0)
 else
 {
 	printf("\nPeer server %s has the file and please wait while it delivers file\n",hostname);
-	fp=fopen(filename,"w");   //rfc folder should be there 
+	fp=(filename,"w");   //rfc folder should be there 
 	if(fp!=NULL)
 		{
 		fwrite(file_data,sizeof(char),sizeof(file_data),fp);  //here chances are there that dummy content may be appened 
