@@ -15,7 +15,8 @@
 #include<fcntl.h>
 
 #define SERVER_PORT 7752
-#define SERVER_ADDR "192.168.1.121"
+//#define SERVER_ADDR "192.168.1.121"
+#define SERVER_ADDR "127.0.0.1"
 #define BUFSIZE 256
 
 int ssock;
@@ -28,11 +29,23 @@ void c_peer(int inpipe);
 bool download_content(int rfc_no,char* hostname,int port);
 void *handle_peer(void *arg);
 
+void terminate(int sock, char host[50], char port[50])
+{
+  char term_req[BUFSIZE];
+
+  generate_request(term_req, TERMINATE, -1, host, port, "");
+
+#ifdef APP
+  printf("\nsending: %s\n", term_req);
+#endif
+
+  write_to(sock, term_req, BUFSIZE);
+}
+
 void segv(int signum)
 {
   int status;
-
-  write_to(ssock, "<TERMINATE>", 11);
+  char term_req[BUFSIZE];
 
   close_sock(ssock);
 
@@ -218,6 +231,7 @@ void c_peer(int inpipe)
 			break;			
 		case 4:			
 	        	printf("Thank you for using Program\n");
+			terminate(csock, myhostname, myport);
 			close_sock(csock);
 			raise(SIGINT);
 			return;

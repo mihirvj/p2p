@@ -72,7 +72,7 @@ void generate_request(char req[1000], int req_type, int rfc, char host[50], char
 	sprintf(req, LISTALLRFC, VERSION, host, port);
    break;
    case TERMINATE:
-	sprintf(req, TERMINATE, host, port);
+	sprintf(req, TERMINATECON, host, port);
    break;
  } 
 }
