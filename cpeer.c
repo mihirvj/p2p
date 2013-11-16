@@ -295,17 +295,21 @@ void *handle_peer(void *arg)
 		 
 		memset(send_buf, 0, BUFSIZE);
 
-	    	while((sent = read(fp, send_buf, BUFSIZE)) > 0)
+	    	while((sent = read(fp, send_buf, BUFSIZE - 1)) > 0)
 	    	{
-			if(sent < BUFSIZE)
+			if(sent < (BUFSIZE - 1))
 			{
-				send_buf[sent - 1] = '\0';
+				send_buf[sent] = '\0';
+			}
+			else
+			{
+				send_buf[BUFSIZE] = '\0';
 			}
 
 			printf("file content is:\n%s\n",send_buf); 
-			write_to(cssock, send_buf, strlen(send_buf));
-	        	printf("\nsent %d bytes\n", strlen(send_buf));	
-			//memset(send_buf, 0, BUFSIZE);
+			write_to(cssock, send_buf, sent);
+	        	printf("\nsent %d bytes\n", sent);	
+			memset(send_buf, 0, BUFSIZE);
 	    	}
 
 	    close(fp);
@@ -352,7 +356,7 @@ bool download_content(int rfc_no,char* hostname,int port)
 #ifdef GRAN1
 	printf("\ni m waiting while server delivers\n");
 #endif
-	while(readBytes = read(tsock, file_data, BUFSIZE) > 0)
+	while(readBytes = read(tsock, file_data, BUFSIZE - 1) > 0)
 	{
 		received = true;
 
