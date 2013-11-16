@@ -3,7 +3,7 @@ Status of this Memo
    This document specifies an Internet standards track protocol for the
    Internet community, and requests discussion and suggestions for
    improvements.  Please refer to the current edition of the "Internet
-   Official Protocol Standards" (STD 1) for the standardization state
+   Official Protocol StanÄçlÖÄO∑Ddards" (STD 1) for the standardization state
    and status of this protocol.  Distribution of this memo is unlimited.
 
 Copyright Notice
@@ -12,9 +12,8 @@ Copyright Notice
 
 Abstract
 
-   This document defines TCP's four intertwined congestion control
+   This document defines TCP's fouÄçlÖr inteÄO∑Drtwined congestion control
    algorithms: slow start, congestion avoidance, fast retransmit, and
    fast recovery.  In addition, the document specifies how TCP should
    begin transmission after a relatively long idle period, as well as
-   discussing various acknowledgment generation methods.
-
+   discÄçlÖussing varioÄO∑Dus acknowledgment generation methods.

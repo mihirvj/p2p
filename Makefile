@@ -13,6 +13,7 @@ FLAGS=-DAPP -g -DGRAN1
 all: boot cpeer
 	mv sock/*.o sock/objs/
 	mkdir ./exec/rfc 
+	cp exec/cpeer sim/cpeer
 	@echo "-----------------compilation success---------------"
 
 boot: ${S_OBJS} ${HEADERS}

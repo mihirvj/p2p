@@ -9,5 +9,5 @@
 void error(char *msg);
 void close_sock(int sock);
 int get_sock();
-void read_from(int sock, char *buffer, int buf_len);
-void write_to(int sock, char *buffer, int buf_len);
+int read_from(int sock, char *buffer, int buf_len);
+int write_to(int sock, char *buffer, int buf_len);

@@ -39,7 +39,7 @@ void add_rnode(rnode **head,int rfc_no,char *title,char *hostname,int port)
      while(temp!= NULL) 
         
      {
-        if( ((temp->rfc_no)==(rfc_no)) && (strcmp(temp->host,hostname)==0))
+        if( ((temp->rfc_no)==(rfc_no)) && (strcmp(temp->host,hostname)==0) && temp->port == port)
             {
   		duplicate=1;
   		break;

@@ -8,7 +8,7 @@ ADD	parser/parse.h	/^  ADD = 0,$/;"	e	enum:__anon2
 ADDRFC	parser/parse.h	13;"	d
 BOOT_OBJ	Makefile	/^BOOT_OBJ=boot.o $/;"	m
 BUFSIZE	boot.c	17;"	d	file:
-BUFSIZE	cpeer.c	16;"	d	file:
+BUFSIZE	cpeer.c	19;"	d	file:
 BadRequest	parser/parse.h	/^  BadRequest = 400,$/;"	e	enum:__anon1
 CPEER_OBJ	Makefile	/^CPEER_OBJ=cpeer.o $/;"	m
 CRLF	parser/parse.h	9;"	d
@@ -37,11 +37,10 @@ OBJS	sock/Makefile	/^OBJS=csock.o ssock.o data.o$/;"	m
 OK	parser/parse.h	/^  OK = 200,$/;"	e	enum:__anon1
 PLIB	Makefile	/^PLIB=-lpthread$/;"	m
 PORT	boot.c	16;"	d	file:
-SERVER_ADDR	cpeer.c	15;"	d	file:
-SERVER_PORT	cpeer.c	14;"	d	file:
+SERVER_ADDR	cpeer.c	18;"	d	file:
+SERVER_PORT	cpeer.c	17;"	d	file:
 SIZE	parser/parse.h	17;"	d
 SPACE	parser/parse.h	8;"	d
-SPEER_OBJ	Makefile	/^SPEER_OBJ=speer.o$/;"	m
 S_HEADERS	Makefile	/^S_HEADERS=ds\/ll\/hostll.h ds\/ll\/rfcll.h sock\/ssock.h sock\/data.h $/;"	m
 S_OBJS	Makefile	/^S_OBJS=ds\/ll\/hostll.o ds\/ll\/rfcll.o sock\/ssock.o sock\/data.o parser\/parse.o $/;"	m
 VERSION	parser/parse.h	7;"	d
@@ -50,7 +49,7 @@ accept_con	sock/ssock.c	/^int accept_con(int sock)$/;"	f
 add_hnode	ds/ll/hostll.c	/^void add_hnode(hnode **head, char *hostname,int port)$/;"	f
 add_node	ds/bst/bst.c	/^void add_node(int data)$/;"	f
 add_node	ds/bst/ll/ll.c	/^void add_node(int key, int data)$/;"	f
-add_node	ds/ll/ll.c	/^void add_node(node **head, int key, int data)$/;"	f
+add_node	ds/ll/.ll.c	/^void add_node(node **head, int key, int data)$/;"	f
 add_rnode	ds/ll/rfcll.c	/^void add_rnode(rnode **head,int rfc_no,char *title,char *hostname,int port)$/;"	f
 add_to_tree	ds/bst/bst.c	/^void add_to_tree(bst *node, bst *ptr)$/;"	f
 append_response	parser/parse.c	/^void append_response(char buf[1000], int rfc, char host[50], char port[50], char title[50])$/;"	f
@@ -64,18 +63,20 @@ connect_to	sock/csock.c	/^void connect_to(int sock, char *server_addr, int port)
 csock	cpeer.c	/^int csock;$/;"	v
 data	ds/bst/bst.h	/^  int data;$/;"	m	struct:binary_search_tree
 data	ds/bst/ll/ll.h	/^  int data;$/;"	m	struct:ll
-data	ds/ll/ll.h	/^  int data;$/;"	m	struct:ll
+data	ds/ll/.ll.h	/^  int data;$/;"	m	struct:ll
 delete_hnode	ds/ll/hostll.c	/^int delete_hnode(hnode **head, char *hostname)$/;"	f
-delete_node	ds/ll/ll.c	/^int delete_node(node **head, int key)$/;"	f
+delete_node	ds/ll/.ll.c	/^int delete_node(node **head, int key)$/;"	f
 delete_rnode	ds/ll/rfcll.c	/^int delete_rnode(rnode **head, char *hostname)$/;"	f
 destroy_hlist	ds/ll/hostll.c	/^void destroy_hlist(hnode **head)$/;"	f
-destroy_list	ds/ll/ll.c	/^void destroy_list(node **head)$/;"	f
-destroy_list	ds/ll/rfcll.c	/^void destroy_list(rnode **head)$/;"	f
+destroy_list	ds/ll/.ll.c	/^void destroy_list(node **head)$/;"	f
+destroy_rlist	ds/ll/rfcll.c	/^void destroy_rlist(rnode **head)$/;"	f
+download_content	cpeer.c	/^bool download_content(int rfc_no,char* hostname,int port)$/;"	f
 error	sock/data.c	/^void error(char *msg)$/;"	f
 generate_request	parser/parse.c	/^void generate_request(char req[1000], int req_type, int rfc, char host[50], char port[50], char title[50])$/;"	f
 generate_response	parser/parse.c	/^void generate_response(char buf[1000], int code, int method)$/;"	f
 get_sock	sock/data.c	/^int get_sock()$/;"	f
 handle_con	boot.c	/^void *handle_con(void *arg)$/;"	f
+handle_peer	cpeer.c	/^void *handle_peer(void *arg)$/;"	f
 head	ds/bst/ll/ll.c	/^node *head = NULL;$/;"	v
 hnode	ds/ll/hostll.h	/^}hnode;$/;"	t	typeref:struct:hostnode
 host	ds/ll/hostll.h	/^  char *host;$/;"	m	struct:hostnode
@@ -84,25 +85,24 @@ host_head	boot.c	/^hnode *host_head;$/;"	v
 hostnode	ds/ll/hostll.h	/^typedef struct hostnode$/;"	s
 htraversal	ds/ll/hostll.c	/^void htraversal(hnode *head)$/;"	f
 key	ds/bst/ll/ll.h	/^  int key;$/;"	m	struct:ll
-key	ds/ll/ll.h	/^  int key;$/;"	m	struct:ll
+key	ds/ll/.ll.h	/^  int key;$/;"	m	struct:ll
 last	ds/bst/ll/ll.c	/^node *last = NULL;$/;"	v
 left	ds/bst/bst.h	/^  struct binary_search_tree *left;$/;"	m	struct:binary_search_tree	typeref:struct:binary_search_tree::binary_search_tree
 listen_sock	sock/ssock.c	/^void listen_sock(int sock)$/;"	f
 ll	ds/bst/ll/ll.h	/^typedef struct ll$/;"	s
-ll	ds/ll/ll.h	/^typedef struct ll$/;"	s
+ll	ds/ll/.ll.h	/^typedef struct ll$/;"	s
 locate_node	ds/bst/bst.c	/^void locate_node(bst *node, int data)$/;"	f
-lookupall	ds/ll/ll.c	/^node** lookupall(node *head, int key)$/;"	f
-lookupall	ds/ll/rfcll.c	/^rnode** lookupall(rnode *head, int rfc_no)$/;"	f
+lookupall	ds/ll/.ll.c	/^node** lookupall(node *head, int key)$/;"	f
 main	boot.c	/^int main(int argc, char **argv)$/;"	f
 main	cpeer.c	/^int main(int argc, char **argv)$/;"	f
 main	parser/stub.c	/^int main()$/;"	f
 main	speer.c	/^int main(int argc, char **argv)$/;"	f
 next	ds/bst/ll/ll.h	/^  struct ll *next;$/;"	m	struct:ll	typeref:struct:ll::ll
+next	ds/ll/.ll.h	/^  struct ll *next;$/;"	m	struct:ll	typeref:struct:ll::ll
 next	ds/ll/hostll.h	/^  struct hostnode *next;$/;"	m	struct:hostnode	typeref:struct:hostnode::hostnode
-next	ds/ll/ll.h	/^  struct ll *next;$/;"	m	struct:ll	typeref:struct:ll::ll
 next	ds/ll/rfcll.h	/^  struct rfcnode *next;$/;"	m	struct:rfcnode	typeref:struct:rfcnode::rfcnode
 node	ds/bst/ll/ll.h	/^}node;$/;"	t	typeref:struct:ll
-node	ds/ll/ll.h	/^}node;$/;"	t	typeref:struct:ll
+node	ds/ll/.ll.h	/^}node;$/;"	t	typeref:struct:ll
 parse_line	parser/parse.c	/^int parse_line(char out[SIZE], char *buf, int line_no, int *method)$/;"	f
 parse_line_1	parser/parse.c	/^int parse_line_1(char out[SIZE], char *line, int *method)$/;"	f
 parse_line_2	parser/parse.c	/^int parse_line_2(char out[SIZE], char *line)$/;"	f
@@ -115,16 +115,17 @@ port	cpeer.c	/^int port;$/;"	v
 port	ds/ll/hostll.h	/^  int port;	$/;"	m	struct:hostnode
 port	ds/ll/rfcll.h	/^  int port;$/;"	m	struct:rfcnode
 print_tree	ds/bst/bst.c	/^void print_tree(bst *node)$/;"	f
-read_from	sock/data.c	/^void read_from(int sock, char *buffer, int buf_len)$/;"	f
+read_from	sock/data.c	/^int read_from(int sock, char *buffer, int buf_len)$/;"	f
 read_my_ip	sock/csock.c	/^void read_my_ip(char ip[50])$/;"	f
 reverse	ds/bst/ll/ll.c	/^void reverse()$/;"	f
 rfc_head	boot.c	/^rnode *rfc_head;$/;"	v
 rfc_no	ds/ll/rfcll.h	/^  int rfc_no;$/;"	m	struct:rfcnode
 rfcnode	ds/ll/rfcll.h	/^typedef struct rfcnode$/;"	s
 right	ds/bst/bst.h	/^  struct binary_search_tree *right;$/;"	m	struct:binary_search_tree	typeref:struct:binary_search_tree::binary_search_tree
+rlookupall	ds/ll/rfcll.c	/^void rlookupall(rnode *head, int rfc_no, rnode **list)$/;"	f
 rnode	ds/ll/rfcll.h	/^}rnode;$/;"	t	typeref:struct:rfcnode
 root	ds/bst/bst.c	/^bst *root = NULL;$/;"	v
-rtraversal	ds/ll/rfcll.c	/^void rtraversal(rnode *head)$/;"	f
+rtraverse	ds/ll/rfcll.c	/^void rtraverse(rnode *head)$/;"	f
 s_peer	cpeer.c	/^void s_peer(int outpipe)$/;"	f
 segv	boot.c	/^void segv(int signum)$/;"	f
 segv	cpeer.c	/^void segv(int signum)$/;"	f
@@ -134,7 +135,7 @@ title	ds/ll/rfcll.h	/^  char *title;	$/;"	m	struct:rfcnode
 trace_node	ds/bst/bst.c	/^void trace_node(int data)$/;"	f
 traverse	ds/bst/bst.c	/^void traverse()$/;"	f
 traverse	ds/bst/ll/ll.c	/^void traverse()$/;"	f
-traverse	ds/ll/ll.c	/^void traverse(node *head)$/;"	f
+traverse	ds/ll/.ll.c	/^void traverse(node *head)$/;"	f
 update_node	ds/bst/ll/ll.c	/^int update_node(int key, int new_data)$/;"	f
-update_node	ds/ll/ll.c	/^int update_node(node *head, int key, int new_data)$/;"	f
-write_to	sock/data.c	/^void write_to(int sock, char *buffer, int buf_len)$/;"	f
+update_node	ds/ll/.ll.c	/^int update_node(node *head, int key, int new_data)$/;"	f
+write_to	sock/data.c	/^int write_to(int sock, char *buffer, int buf_len)$/;"	f
