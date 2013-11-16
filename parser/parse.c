@@ -71,6 +71,9 @@ void generate_request(char req[1000], int req_type, int rfc, char host[50], char
    case LISTALL:
 	sprintf(req, LISTALLRFC, VERSION, host, port);
    break;
+   case TERMINATE:
+	sprintf(req, TERMINATE, host, port);
+   break;
  } 
 }
 
@@ -109,7 +112,7 @@ int parse_request(char request[1000], char rfc[50], char host[50], char port[50]
 	return errcode;
  }
  
- if(*method != LISTALL)
+ if(*method != LISTALL && *method != TERMINATE)
  {
 	errcode = parse_line(in, request, 4, method);
 
@@ -217,6 +220,8 @@ int parse_line_1(char out[SIZE], char *line, int *method)
 	*method = LOOKUP;
  else if(!strcmp(field, "LIST"))
 	*method = LISTALL;
+ else if(!strcmp(field, "TERMINATE"))
+	*method = TERMINATE;
  else
  {
 	return BadRequest;
@@ -239,6 +244,10 @@ int parse_line_1(char out[SIZE], char *line, int *method)
 	}
 
 	strcpy(out, "*");
+ }
+ else if(*method == TERMINATE)
+ {
+	
  }
  else
  {

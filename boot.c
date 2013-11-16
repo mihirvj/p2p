@@ -223,6 +223,20 @@ while(1)
 	rtraverse(rlist);
 #endif
  }
+ if(method == TERMINATE)
+ {
+	printf("\nTermination request from %d\n", csock);
+	delete_hnode(&host_head, host);
+	delete_rnode(&rfc_head, host);
+
+#ifdef APP
+	printf("\ndeleted from rfc list: List after deleting\n");
+	rtraverse(rfc_head);
+#endif
+	close_sock(csock);
+	break;
+ }
+
  // echo reply to client
  write_to(csock, buf, BUFSIZE);
 

@@ -15,7 +15,7 @@
 #include<fcntl.h>
 
 #define SERVER_PORT 7752
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "192.168.1.121"
 #define BUFSIZE 256
 
 int ssock;
@@ -31,6 +31,8 @@ void *handle_peer(void *arg);
 void segv(int signum)
 {
   int status;
+
+  write_to(ssock, "<TERMINATE>", 11);
 
   close_sock(ssock);
 

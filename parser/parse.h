@@ -13,6 +13,7 @@
 #define ADDRFC "ADD RFC %d %s\r\nHost: %s\r\nPort: %s\r\nTitle: %s"
 #define LOOKUPRFC "LOOKUP RFC %d %s\r\nHost: %s\r\nPort: %s\r\nTitle: %s"
 #define LISTALLRFC "LIST ALL %s\r\nHost: %s\r\nPort: %s"
+#define TERMINATECON "TERMINATE\n\rHost: %s\r\nPort: %s"
 
 #define SIZE 100
 
@@ -27,7 +28,8 @@ enum{
   ADD = 0,
   GET = 1,
   LOOKUP = 2,
-  LISTALL = 3
+  LISTALL = 3,
+  TERMINATE = 4
 };
 
 void generate_request(char req[1000], int req_type, int rfc, char host[50], char port[50], char title[50]);

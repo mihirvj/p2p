@@ -7,7 +7,7 @@
 
 #include "csock.h"
 
-void connect_to(int sock, char *server_addr, int port)
+int connect_to(int sock, char *server_addr, int port)
 {
  struct sockaddr_in sin_serversock;
  struct hostent *h_server;
@@ -30,8 +30,11 @@ void connect_to(int sock, char *server_addr, int port)
 
  if(connect(sock, (struct sockaddr *) &sin_serversock, sizeof(sin_serversock)) < 0)
  {
-  error("error while connecting");
+   //error("error while connecting");
+	return -1;
  }
+
+ return 0;
 }
 
 void read_my_ip(char ip[50])
