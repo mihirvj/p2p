@@ -43,13 +43,16 @@ int accept_con(int sock)
    error("error while accepting connection");
  else
  {
+#ifdef GRAN1
    printf("\naccepted connection successfully from ");
+
    sprintf(req_from, "%d.%d.%d.%d", (int)(client.sin_addr.s_addr&0xFF),
     (int)((client.sin_addr.s_addr&0xFF00)>>8),
     (int)((client.sin_addr.s_addr&0xFF0000)>>16),
     (int)((client.sin_addr.s_addr&0xFF000000)>>24));
 
    printf("%s:%d\n", req_from, ntohs(client.sin_port));
+#endif
  }
 
  return csock;

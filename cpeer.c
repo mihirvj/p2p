@@ -357,7 +357,7 @@ void *handle_peer(void *arg)
  	char err_buf[20];
 	
  	
-#ifdef APP
+#ifdef GRAN1
  printf("[log] I am handling cpeer thread : %d", csock);
 #endif
 
@@ -365,7 +365,7 @@ void *handle_peer(void *arg)
 
 	char *temp=buf;
 
-#ifdef APP
+#ifdef GRAN1
  printf("\n[log] Peer client says: %s\n", buf);
 #endif
         
@@ -375,9 +375,9 @@ void *handle_peer(void *arg)
 	{
 		char send_buf[BUFSIZE];              //we don't know the file size in advance (It will be a waste for files which are 
 						  //relatively small	
-		#ifdef APP
-		 printf("[log] writing to  Peer client %s\n", buf);
-		#endif
+#ifdef GRAN1
+	 printf("[log] writing to  Peer client %s\n", buf);
+#endif
 		 
 		memset(send_buf, 0, BUFSIZE);
 
@@ -392,15 +392,22 @@ void *handle_peer(void *arg)
 				send_buf[BUFSIZE] = '\0';
 			}
 
-			printf("file content is:\n%s\n",send_buf); 
+#ifdef GRAN1
+	printf("file content is:\n%s\n",send_buf); 
+#endif
 			write_to(cssock, send_buf, sent);
-	        	printf("\nsent %d bytes\n", sent);	
+
+#ifdef GRAN1
+       	printf("\nsent %d bytes\n", sent);	
+#endif
 			memset(send_buf, 0, BUFSIZE);
 	    	}
 
 	    close(fp);
 
-	    printf("File operation Completed\n"); 	
+#ifdef GRAN1
+	printf("File operation Completed\n"); 	
+#endif
 	}
 	else
 	{
@@ -412,7 +419,7 @@ void *handle_peer(void *arg)
 	 
  	close_sock(cssock);
 
-#ifdef APP
+#ifdef GRAN1
  printf("[log] client socket closed %d\n", cssock);
 #endif
 
