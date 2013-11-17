@@ -13,6 +13,7 @@
 #include<pthread.h>
 #include<stdbool.h>
 #include<fcntl.h>
+#include<dirent.h>
 
 #define SERVER_PORT 7752
 //#define SERVER_ADDR "192.168.1.121"
@@ -23,6 +24,7 @@ int ssock;
 int csock;
 int port;
 int pid;
+char myport[50], myhostname[50];
 
 void s_peer(int outpipe);
 void c_peer(int inpipe);
@@ -47,6 +49,16 @@ void segv(int signum)
   int status;
   char term_req[BUFSIZE];
 
+#ifdef APP
+  printf("\nI %s:%s am closing\n", myhostname, myport);
+#endif
+
+  if(strcmp(myhostname, "") != 0 && strcmp(myport, "") != 0)
+  {
+	terminate(csock, myhostname, myport);
+  }
+
+  close_sock(csock);
   close_sock(ssock);
 
   printf("\npress ctrl + c to exit\n");
@@ -165,16 +177,19 @@ void s_peer(int outpipe)
 
 } // s_speer ends
 
+
 void c_peer(int inpipe)
 {
  	int choice, i;
 	char request[BUFSIZE], response[BUFSIZE];
-	char myport[50], myhostname[50];
 	int rfc;
 	char title[50];
 
 	char c_rfc[50], host[50], port[50];
 
+	DIR *d;
+	struct dirent *entry;
+	
 	//client socket (cpeer);
 	//get client socket descriptor  
 	csock = get_sock();
@@ -192,21 +207,61 @@ void c_peer(int inpipe)
 	connect_to(csock, SERVER_ADDR, SERVER_PORT);   //used 5000 port because we don't know server peer port
 
 	printf("\n***********Welcome to Peer to Peer RFC Document Transfer Application***********\n");
-	printf("\nMake sure you have rfc folder in current directory\n");
+	printf("\nMake sure you have rfc folder in directory of your executable\n");
+
+	// add entries of current rfcs when booted up
+	
+	d = opendir("./rfc");
+
+	if(d)
+	{
+		while((entry = readdir(d)) != NULL)
+		{
+			char rfc[50];
+
+			if(strcmp(entry->d_name, "..") == 0 || strcmp(entry->d_name, ".") == 0)
+				continue;
+
+			memset(request,(int) '\0',BUFSIZE);	
+#ifdef APP
+	printf("found file: %s\n", entry->d_name);
+#endif
+
+			sscanf(entry->d_name, "%s.txt", rfc);
+
+#ifdef APP
+	printf("sending to server: %s\n", rfc);
+#endif
+	
+			generate_request(request, ADD, atoi(rfc), myhostname, myport, "title"); 
+			
+			write_to(csock, request, BUFSIZE);
+
+			read_from(csock, response, BUFSIZE);
+#ifdef APP
+	printf("Boot Server Response is \n%s\n",response);
+#endif
+		}
+
+		closedir(d);
+	}
+	else // TODO: handle case where no rfc folder is specified
+	{
+
+	}
 
 	while(1) // loop forever unless user tells it to stop ; option 4
 	{
 		memset(request,(int) '\0',BUFSIZE);	
 
-		printf("\nPress 1 for Add\n");	
-		printf("Press 2 for Lookup and download\n");
-		printf("Press 3 for list\n");	
-		printf("Press 4 for Terminate: \n");
+		printf("\nPress 1 for Lookup and download\n");
+		printf("Press 2 for list\n");	
+		printf("Press 3 for Terminate: \n");
 		scanf("%d",&choice);
 
 		switch(choice)
 		{
-		case 1:
+		/*case 1:
 			printf("\n Please Enter RFC Number: ");
 			scanf("%d", &rfc);                    //what if user by mistake write wrong rfc no?
 							      //whether we should automatically do this when client server 								      //starts	in begining
@@ -217,22 +272,22 @@ void c_peer(int inpipe)
 			scanf("%s", title);
 
 			generate_request(request, ADD, rfc, myhostname, myport, title); 
-		break;
-		case 2:
-			printf("\n Please Enter RFC Number: ");
+		break;*/
+		case 1:
+			printf("\nPlease Enter RFC Number: ");
 			scanf("%d", &rfc);
 
 			printf("\nPlease Enter RFC Title: ");
 			scanf("%s", title);
 			generate_request(request, LOOKUP, rfc, myhostname, myport, title);
 		break;
-		case 3:	
-			generate_request(request, LISTALL, -1, myhostname, myport, "sample");  //why 1000, doesn't matter
+		case 2:	
+			generate_request(request, LISTALL, -1, myhostname, myport, "sample");  //why -1, doesn't matter
 			break;			
-		case 4:			
+		case 3:			
 	        	printf("Thank you for using Program\n");
-			terminate(csock, myhostname, myport);
-			close_sock(csock);
+			//terminate(csock, myhostname, myport);
+			//close_sock(csock);
 			raise(SIGINT);
 			return;
 		} // switch ends
@@ -246,31 +301,46 @@ void c_peer(int inpipe)
 
 		printf("Boot Server Response is \n%s\n",response);
 	
- 		if(choice == LOOKUP)
+ 		if(choice == 1) // lookup
 		{
 			i = 0;
 			printf("\nplease wait while your file is downloadedn\n");
 	
 	
-			bool status=false;
+			bool success=false;
  			while(parse_response(response, i, c_rfc, title, host, port) != -1)
 			{
 	  			printf("\nI understand that rfc %s is with %s:%s\n", c_rfc, host, port);
 
-	   			status = download_content(rfc,host,atoi(port));  //i am using rfc no here not rfc array
+	   			success = download_content(rfc,host,atoi(port));  //i am using rfc no here not rfc array
 		
-	   			if(status==true)
+	   			if(success)
 	   			{
-					printf("Your file is sucessfully downloaded");
-					//here we can send add request to server if we want to	
+					printf("\nRfc %s file is sucessfully downloaded\n", c_rfc);
+					//send add to server for just downloaded file
+					
+					generate_request(request, ADD, atoi(c_rfc), myhostname, myport, title); 
+
+					write_to(csock, request, BUFSIZE);
+
+					read_from(csock, response, BUFSIZE);
+
+#ifdef APP
+	printf("\nServer responded:\n%s\n", response);
+#endif
 					break;	
 	   			}
 	   			else
 	   			{
-					i++;
+					i++; // try next host
 	   			}
 	
-	 		}
+	 		} // while ends
+
+			if(!success)
+			{
+				printf("\nNo peer from list seems to have the file. Please retry later\n");
+			}
 		} // if ends
 
 	} // while ends
