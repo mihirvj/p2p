@@ -8,7 +8,7 @@ CPEER_OBJ=cpeer.o
 EXEC_PATH=exec
 PLIB=-lpthread
 
-FLAGS=-DAPP -g #-DGRAN1
+FLAGS=-g #-DAPP -DGRAN1
 
 all: boot cpeer
 	mv sock/*.o sock/objs/

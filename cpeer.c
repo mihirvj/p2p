@@ -108,7 +108,9 @@ void s_peer(int outpipe)
         srand(time(NULL));
 	port=(rand()%(65535-1024))+1024;
 
+#ifdef GRAN1
 	printf("\nserver peer port number: %d\n", port);
+#endif
 
 	//right now we need to know the port no. so assigned fix one
 	//port=5000;
@@ -145,7 +147,9 @@ void s_peer(int outpipe)
 
 	read_my_ip(myhostname);
 
+#ifdef GRAN1
 	printf("sending port: %s host: %s\n", myport, myhostname);
+#endif
 
 	write_to(outpipe, myport, 50);
 	
@@ -199,7 +203,9 @@ void c_peer(int inpipe)
 
 	close(inpipe);
 
+#ifdef GRAN1
 	printf("received port: %s host: %s\n", myport, myhostname);
+#endif
 
 	//connect to server socket
 	//connect_to(sock, SERVER_ADDR, SERVER_PORT);  //this is for communication between cpeer and server
@@ -304,19 +310,21 @@ void c_peer(int inpipe)
  		if(choice == 1) // lookup
 		{
 			i = 0;
-			printf("\nplease wait while your file is downloadedn\n");
+			printf("\nplease wait while your file is downloaded\n");
 	
 	
 			bool success=false;
  			while(parse_response(response, i, c_rfc, title, host, port) != -1)
 			{
-	  			printf("\nI understand that rfc %s is with %s:%s\n", c_rfc, host, port);
+#ifdef APP
+	printf("\nI understand that rfc %s is with %s:%s\n", c_rfc, host, port);
+#endif
 
 	   			success = download_content(rfc,host,atoi(port));  //i am using rfc no here not rfc array
 		
 	   			if(success)
 	   			{
-					printf("\nRfc %s file is sucessfully downloaded\n", c_rfc);
+					printf("\nRfc %d is sucessfully downloaded\n", atoi(c_rfc));
 					//send add to server for just downloaded file
 					
 					generate_request(request, ADD, atoi(c_rfc), myhostname, myport, title); 
@@ -354,8 +362,8 @@ void *handle_peer(void *arg)
  	int cssock = *(int *) arg;
  	int fp;
  	int sent;
- 	char err_buf[20];
-	
+ 	char err_buf[20], rfc[50], host[50], port[50], title[100], fname[20];
+	int method, errcode;
  	
 #ifdef GRAN1
  printf("[log] I am handling cpeer thread : %d", csock);
@@ -369,7 +377,27 @@ void *handle_peer(void *arg)
  printf("\n[log] Peer client says: %s\n", buf);
 #endif
         
-	fp = open(buf, O_RDONLY, S_IRUSR);  //here we can make one rfc folder in current directory and put all files there
+	errcode = parse_request(buf, rfc, host, port, title, &method);
+
+	if(errcode != OK)
+	{
+#ifdef APP
+	printf("\nErrcode: %d\n", errcode);
+#endif
+		generate_response(buf, errcode, method);
+
+		write_to(cssock, buf, BUFSIZE);
+
+		return;
+	}
+
+	sprintf(fname, "./rfc/%d.txt", atoi(rfc));
+
+#ifdef APP
+	printf("\ngot filename as: %s\n", fname);
+#endif
+
+	fp = open(fname, O_RDONLY, S_IRUSR);  //here we can make one rfc folder in current directory and put all files there
 
 	if(fp != -1)
 	{
@@ -432,7 +460,7 @@ bool download_content(int rfc_no,char* hostname,int port)
 	int tsock;
 	char filename[BUFSIZE];
 	char file_data[BUFSIZE];
-	char temp_buf[8];
+	char port_no[8];
 	int fp = -9999, readBytes;
 	bool received = false;
 
@@ -440,9 +468,17 @@ bool download_content(int rfc_no,char* hostname,int port)
 
 	connect_to(tsock,hostname, port);
 
-	sprintf(filename,"rfc/%d.txt",rfc_no);  //file should be in rfc folder in current directory
+	sprintf(port_no,"%d", port);
+
+	generate_request(filename, GET, rfc_no, myhostname, myport, "title"); 
+
+#ifdef APP
+	printf("\nseding GET request as:\n%s\n", filename);
+#endif
 
 	write_to(tsock, filename, BUFSIZE); // inform peer about file name i want
+
+	sprintf(filename, "./rfc/%d.txt", rfc_no);
 
 	memset(file_data, 0, BUFSIZE);
 
@@ -468,7 +504,7 @@ bool download_content(int rfc_no,char* hostname,int port)
 		}
 		else
 		{*/
-			printf("\nPeer server %s has the file and please wait while it delivers file\n",hostname);
+			printf("\rPeer server %s has the file and please wait while it delivers file",hostname);
 
 			if(fp == -9999) // open file once
 				fp = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);   //rfc folder should be there 
