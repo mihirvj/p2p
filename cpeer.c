@@ -16,15 +16,13 @@
 #include<dirent.h>
 
 #define SERVER_PORT 7752
-//#define SERVER_ADDR "192.168.1.121"
-#define SERVER_ADDR "127.0.0.1"
-#define BUFSIZE 256
 
 int ssock;
 int csock;
 int port;
 int pid;
 char myport[50], myhostname[50];
+char* SERVER_ADDR;
 
 void s_peer(int outpipe);
 void c_peer(int inpipe);
@@ -69,9 +67,24 @@ void segv(int signum)
   kill(getpid(), signum);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
- int pfd[2];
+ 
+	if(argc!=2)
+	{
+		printf("usage: ./cpeer <Server Address>\n");
+		return 1;
+	}
+	else
+	{
+		SERVER_ADDR=argv[1];
+	}
+
+
+
+
+int pfd[2];
+
 
  pipe(pfd);
 
@@ -213,7 +226,7 @@ void c_peer(int inpipe)
 	connect_to(csock, SERVER_ADDR, SERVER_PORT);   //used 5000 port because we don't know server peer port
 
 	printf("\n***********Welcome to Peer to Peer RFC Document Transfer Application***********\n");
-	printf("\nMake sure you have rfc folder in directory of your executable\n");
+	printf("\nMake sure You have rfc folder in directory of your Executable\n");
 
 	// add entries of current rfcs when booted up
 	
@@ -259,10 +272,12 @@ void c_peer(int inpipe)
 	while(1) // loop forever unless user tells it to stop ; option 4
 	{
 		memset(request,(int) '\0',BUFSIZE);	
-
+		printf("\n**************************************************************\n");
+		printf("                              MENU                            ");			
 		printf("\nPress 1 for Lookup and download\n");
 		printf("Press 2 for list\n");	
 		printf("Press 3 for Terminate: \n");
+		printf("**************************************************************\n");			
 		scanf("%d",&choice);
 
 		switch(choice)
@@ -291,11 +306,20 @@ void c_peer(int inpipe)
 			generate_request(request, LISTALL, -1, myhostname, myport, "sample");  //why -1, doesn't matter
 			break;			
 		case 3:			
-	        	printf("Thank you for using Program\n");
-			//terminate(csock, myhostname, myport);
-			//close_sock(csock);
-			raise(SIGINT);
-			return;
+						
+			;char c;	
+			printf("Are You Sure? Press y(Y)  or n(N): ");
+			scanf(" %c",&c);
+			if(c=='y'|| c=='Y')
+				{		        	
+				printf("Thank you for using Program\n");
+				//terminate(csock, myhostname, myport);
+				//close_sock(csock);
+				raise(SIGINT);
+				return;
+				}
+			else
+			{continue;}
 		} // switch ends
 	
          	//If user press 4 then we need to disable write_to and read_from otherwise it will be written to  boot server 
@@ -304,13 +328,14 @@ void c_peer(int inpipe)
 		write_to(csock, request, BUFSIZE);
 
 		read_from(csock, response, BUFSIZE);
-
-		printf("Boot Server Response is \n%s\n",response);
+		printf("\n*************Reply From Boot-Server************\n");
+		printf("%s\n",response);
+		printf("***************************************************");
 	
  		if(choice == 1) // lookup
 		{
 			i = 0;
-			printf("\nplease wait while your file is downloaded\n");
+//			printf("\nPlease wait while your file is being downloaded\n");
 	
 	
 			bool success=false;
@@ -347,7 +372,9 @@ void c_peer(int inpipe)
 
 			if(!success)
 			{
-				printf("\nNo peer from list seems to have the file. Please retry later\n");
+				printf("\n**************************************************************\n");			
+				printf("No Peer from Currently seems to have the File You are Requesting.Please retry later\n");
+				printf("**************************************************************\n");			
 			}
 		} // if ends
 
@@ -504,8 +531,9 @@ bool download_content(int rfc_no,char* hostname,int port)
 		}
 		else
 		{*/
-			printf("\rPeer server %s has the file and please wait while it delivers file",hostname);
-
+			
+			printf("\rPeer server %s has the file and Please wait while it delivers file",hostname);
+			
 			if(fp == -9999) // open file once
 				fp = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);   //rfc folder should be there 
 
@@ -516,7 +544,7 @@ bool download_content(int rfc_no,char* hostname,int port)
 			}
 			else
 			{
-				perror("Peer client Error: ");
+				perror("**Peer client Error**:   ");
 				received = false;   //here problem is client side so we should not try connecting to different peer because same will 					//happen again
 				break;
 			}	
@@ -525,7 +553,9 @@ bool download_content(int rfc_no,char* hostname,int port)
 
 	if(!received)
 	{
+		printf("\n**************************************************************\n");			
 		printf("\nPeer %s does not seem to have file or some error occured\n", hostname);
+		printf("***************************************************************\n");			
 	}
 
 	if(fp != -9999)

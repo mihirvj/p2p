@@ -84,7 +84,7 @@ while(ptr!=NULL)
 		{
 		if(ptr==*head)
 			{
-			printf("Host  %s Removed Successfully\n",ptr->host);
+			printf("Host  %s removed successfully\n",ptr->host);
 			*head=ptr->next;
 			free(ptr);
 			del_count++;
@@ -92,7 +92,7 @@ while(ptr!=NULL)
 			}
 		else
 			{
-			printf("Host  %s Removed Successfully\n",ptr->host);
+			printf("Host  %s removed successfully\n",ptr->host);
 			prev->next=ptr->next;
 			free(ptr);
 			del_count++;

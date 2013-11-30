@@ -112,14 +112,14 @@ while(ptr!=NULL)
 		{
 		if(ptr==*head)
 			{
-			printf("RFC : %d & Host: %s Removed Successfully\n",ptr->rfc_no,ptr->host);
+			printf("RFC : %d & Host: %s removed successfully\n",ptr->rfc_no,ptr->host);
 			*head=ptr->next;
 			free(ptr);
 			del_count++;
 			}
 		else
 			{
-			printf("RFC : %d & Host: %s Removed Successfully\n",ptr->rfc_no,ptr->host);
+			printf("RFC : %d & Host: %s removed successfully\n",ptr->rfc_no,ptr->host);
 			prev->next=ptr->next;
 			free(ptr);
 			del_count++;

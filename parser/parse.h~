@@ -33,8 +33,8 @@ enum{
   TERMINATE = 4
 };
 
-void generate_request(char req[BUFSIZE], int req_type, int rfc, char host[50], char port[50], char title[50]);
-int parse_request(char req[BUFSIZE], char rfc[50], char host[50], char port[50], char title[100], int *method);
-void generate_response(char buf[BUFSIZE], int errcode, int method);
-void append_response(char buf[BUFSIZE], int rfc, char host[50], char port[50], char title[50]);
-int parse_response(char buf[BUFSIZE], int index, char rfc[50], char title[50], char host[50], char port[50]);
+void generate_request(char req[1000], int req_type, int rfc, char host[50], char port[50], char title[50]);
+int parse_request(char req[1000], char rfc[50], char host[50], char port[50], char title[100], int *method);
+void generate_response(char buf[8196], int errcode, int method);
+void append_response(char buf[8196], int rfc, char host[50], char port[50], char title[50]);
+int parse_response(char buf[8196], int index, char rfc[50], char title[50], char host[50], char port[50]);

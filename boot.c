@@ -12,9 +12,10 @@
 
 #include<signal.h>
 #include<pthread.h>
+#include "config.h"
 
 #define PORT 7752
-#define BUFSIZE 256
+//#define BUFSIZE 8196
 
 rnode *rfc_head;
 hnode *host_head;
@@ -128,7 +129,7 @@ printf("[gran 1] init thread\n");
 
 	add_hnode(&host_head, host, atoi(port));
 
-	printf("\ngot connection from: %s\n", host);
+	printf("\nConnection Eastablished With : %s\n", host);
     id = csock;
 
     // create a thread to handle connection
@@ -184,6 +185,7 @@ while(1)
  {
 	rnode *list = rfc_head;
 
+	
 	while(list != NULL)
 	{
 		char port_no[50];
@@ -197,7 +199,7 @@ while(1)
  if(method == LOOKUP)
  {	
 	rnode *rlist, *rptr;
-	printf("\nlooking up: %s\n", rfc);
+	printf("\nSearching For: %s\n", rfc);
 
 	rlookupall(rfc_head, atoi(rfc), &rlist);
 
@@ -226,8 +228,8 @@ while(1)
  if(method == TERMINATE)
  {
 	printf("\nTermination request from %d\n", csock);
-	delete_hnode(&host_head, host);
-	delete_rnode(&rfc_head, host);
+	delete_hnode(&host_head, host,atoi(port));
+	delete_rnode(&rfc_head, host,atoi(port));
 
 #ifdef APP
 	printf("\ndeleted from rfc list: List after deleting\n");
